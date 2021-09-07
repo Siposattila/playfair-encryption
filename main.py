@@ -27,9 +27,38 @@ def RemoveSpaces(string):
             i = ''
     return string
 
+# Ha a szó hossza nem egyenletes vagyis nem osztója a 2 akkor hozzáadunk egy extra karaktert ebben az esetben a z lesz az
 def Prepare(string):
     if len(string) % 2 != 0:
         string[len(string)] = 'z'
     return string
 
+# Ezzel a funkcióval készítjük el az 5x5-ös két dimenziós kulcs táblánkat
+def GenerateKeyTable(key, keyTable):
+    dicty = dict()
 
+    for i in key:
+        if i != 'j':
+            dicty[i - 97] = 2
+    
+    dicty['j' - 97] = 1
+
+    j = 0
+    i = 0
+
+    for k in key:
+        if dicty[k - 97] == 2:
+            dicty[k - 97] -= 1
+            keyTable[i][j] = key[k]
+            j++
+            if j == 5:
+                i++
+                j = 0
+    
+    for k in 26:
+        if dicty[k] == 0:
+            keyTable[i][j] = chr(k + 97)
+            j++
+            if j == 5:
+                i++
+                j = 0
