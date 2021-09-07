@@ -101,7 +101,7 @@ int mod5(int a)
 {
     return (a % 5);
 }
- 
+
 // Function to make the plain text length to be even
 int prepare(char str[], int ptrs)
 {

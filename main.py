@@ -17,9 +17,19 @@ key = key.lower()
 plaintext = RemoveSpaces(plaintext)
 key = RemoveSpaces(key)
 
+stringArray = np.array()
+keyArray = np.array()
+
 # Ez a funckció eltávolítja az összes lehetséges space-t
 def RemoveSpaces(string):
     for i in string:
         if i == ' ':
             i = ''
     return string
+
+def Prepare(string):
+    if len(string) % 2 != 0:
+        string[len(string)] = 'z'
+    return string
+
+
