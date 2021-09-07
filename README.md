@@ -1,1 +1,1 @@
-# playfair-encryptrion
+# playfair-encryption
