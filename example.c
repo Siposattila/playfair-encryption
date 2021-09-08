@@ -135,6 +135,27 @@ void encrypt(char str[], char keyT[5][5], int ps)
         }
     }
 }
+
+// Function to decrypt
+void decrypt(char str[], char keyT[5][5], int ps)
+{
+    int i, a[4];
+    for (i = 0; i < ps; i += 2) {
+        search(keyT, str[i], str[i + 1], a);
+        if (a[0] == a[2]) {
+            str[i] = keyT[a[0]][mod5(a[1] - 1)];
+            str[i + 1] = keyT[a[0]][mod5(a[3] - 1)];
+        }
+        else if (a[1] == a[3]) {
+            str[i] = keyT[mod5(a[0] - 1)][a[1]];
+            str[i + 1] = keyT[mod5(a[2] - 1)][a[1]];
+        }
+        else {
+            str[i] = keyT[a[0]][a[3]];
+            str[i + 1] = keyT[a[2]][a[1]];
+        }
+    }
+}
  
 // Function to encrypt using Playfair Cipher
 void encryptByPlayfairCipher(char str[], char key[])
@@ -157,7 +178,27 @@ void encryptByPlayfairCipher(char str[], char key[])
  
     encrypt(str, keyT, ps);
 }
+
+// Function to call decrypt
+void decryptByPlayfairCipher(char str[], char key[])
+{
+    char ps, ks, keyT[5][5];
  
+    // Key
+    ks = strlen(key);
+    ks = removeSpaces(key, ks);
+    toLowerCase(key, ks);
+ 
+    // ciphertext
+    ps = strlen(str);
+    toLowerCase(str, ps);
+    ps = removeSpaces(str, ps);
+ 
+    generateKeyTable(key, ks, keyT);
+ 
+    decrypt(str, keyT, ps);
+}
+
 // Driver code
 int main()
 {
@@ -175,6 +216,11 @@ int main()
     encryptByPlayfairCipher(str, key);
  
     printf("Cipher text: %s\n", str);
+
+    // decrypt using Playfair Cipher
+    decryptByPlayfairCipher(str, key);
+ 
+    printf("Deciphered text: %s\n", str);
  
     return 0;
 }

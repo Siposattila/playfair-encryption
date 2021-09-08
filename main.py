@@ -10,28 +10,46 @@ def RemoveSpaces(string):
 # Ha a szó hossza nem egyenletes vagyis nem osztója a 2 akkor hozzáadunk egy extra karaktert ebben az esetben a z lesz az
 def Prepare(string):
     if len(string) % 2 != 0:
+        string += '\0'
         string += 'z'
     return string
 
 # Ezzel a funkcióval készítjük el az 5x5-ös két dimenziós kulcs táblánkat
 def GenerateKeyTable(key, keyTable):
+    alphabet = dict()
+    for i in key:
+        if i != 'j':
+            alphabet[i] = 2
+
+    for i in alphabet:
+        if i == 'j':
+            alphabet[i] = 1
+
     j = 0
     i = 0
 
     for k in key:
-        keyTable[i][j] = k
-        j += 1
-        if j == 5:
-            i += 1
-            j = 0
+        if alphabet[k] == 2:
+            alphabet[k] -= 1
+            keyTable[i][j] = k
+            j += 1
+            if j == 5:
+                i += 1
+                j = 0
     
     k = 0
-    while k < 5:
-        keyTable[i][j] = chr(k + 97)
-        j += 1
-        if j == 5:
-            i += 1
-            j = 0
+    i = 0
+    j = 0
+    while k < 5 and i < 5:
+        print(k, i, j)
+        print(alphabet)
+        if alphabet[k] == 0:
+            keyTable[i][j] = chr(k + 97)
+            j += 1
+            if j == 5:
+                i += 1
+                j = 0
+    print(keyTable)
     return keyTable
 
 # Ezzel a funkcióval keressük meg a digraph karaktereket és visszaadjuk a pozíciójukat
@@ -43,14 +61,18 @@ def SearchForDigraph(keyTable, a, b):
     if b == 'j':
         b = 'i'
 
-    for i in 5:
-        for j in 5:
+    i = 0
+    j = 0
+    while i < 5:
+        while j < 5:
             if keyTable[i][j] == a:
                 digraphPosition[0] = i
                 digraphPosition[1] = j
             elif keyTable[i][j] == b:
                 digraphPosition[2] = i
                 digraphPosition[3] = j
+            j += 1
+        i += 1
     return digraphPosition
 
 # Funckció, ami elvégzi a titkosítást
