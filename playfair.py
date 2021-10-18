@@ -3,13 +3,16 @@
 # A dokumentáció a README.md-ben található
 # Ezen a linken jobban olvasható formátumban is megtalálható: https://github.com/Siposattila/playfair-encryption
 
-# Ez a funckció eltávolítja az összes lehetséges space-t
-def RemoveSpaces(string):
-    cleanedString = ""
+# Ez a funkció behelyettesíti a szóközöket
+def SpaceConversion(string):
+    convertedString = ""
     for i in string:
-        if i != " ":
-            cleanedString += i
-    return cleanedString
+        if i == " ":
+            convertedString += '_'
+        elif i == "_":
+            convertedString += ' '
+        else: convertedString += i
+    return convertedString
 
 # A funckció lényege, hogy megfogjon egy karaktert és beillesze a szövegbe tetszőleges helyre
 def InsertChar(string, charToInsert, position):
@@ -19,43 +22,41 @@ def InsertChar(string, charToInsert, position):
 # ugyanolyan karakter szerepel egymás mellett akkor beillesztünk egy extra karaktert, ami jelenesetben az x
 def Prepare(string):
     plaintextArray = []
-    length = len(string)
+    
+    # string = SpaceConversion(string)
+    if len(string) % 2 != 0:
+        string += 'x'
 
     i = 0
-    while i < length:
+    while i < len(string):
+        if i + 2 > len(string):
+            break
         if string[i] == string[i + 1]:
             plaintextArray.append([string[i], 'x'])
             string = InsertChar(string, 'x', i+1)
-            length += 1
         else:
             plaintextArray.append([string[i], string[i + 1]])
         i += 2
 
     return plaintextArray
 
-# Ez a funkció felelős a kulcs feldolgozásáért és a kulcstábla létrehozásáért, ami egy 5*5-ös mátrix
+# Ez a funkció felelős a kulcs feldolgozásáért és a kulcstábla létrehozásáért, ami egy 6*6-os mátrix
 def GenerateKeyTable(key, keyTableArray):
-    alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-    keyArray = []
-    length = len(key)
+    alphabet = ['a', 'á', 'b', 'c', 'd', 'e', 'é', 'f', 'g', 'h', 'i', 'í', 'j', 'k', 'l', 'm', 'n', 'o', 'ó', 'ö', 'ő', 'p', 'q', 'r', 's', 't', 'u', 'ú', 'ü', 'ű', 'v', 'w', 'x', 'y', 'z', '_']
+    keyArray = [] 
 
-    for i in range(length):
+    # key = SpaceConversion(key)
+    for i in range(len(key)):
         if key[i] not in keyArray:
-            if key[i] == 'j':
-                i += 1
-            else:
-                keyArray.append(key[i])
+            keyArray.append(key[i])
     
     for i in range(len(alphabet)):
         if alphabet[i] not in keyArray:
-            if alphabet[i] == 'j':
-                i += 1
-            else:
-                keyArray.append(alphabet[i])
+            keyArray.append(alphabet[i])
 
     k = 0
-    for i in range(5):
-        for j in range(5):
+    for i in range(len(keyTableArray)):
+        for j in range(len(keyTableArray)):
             keyTableArray[i][j] = keyArray[k]
             k += 1
 
@@ -65,8 +66,8 @@ def GenerateKeyTable(key, keyTableArray):
 def Search(keyTableArray, char):
     position = []
 
-    for i in range(5):
-        for j in range(5):
+    for i in range(len(keyTableArray)):
+        for j in range(len(keyTableArray)):
             if keyTableArray[i][j] == char:
                 position.append(i)
                 position.append(j)
@@ -82,11 +83,11 @@ def Encrypt(plaintextArray, keyTableArray):
         positionB = Search(keyTableArray, plaintextArray[i][1])
 
         if positionA[0] == positionB[0]:
-            if positionA[1] + 1 > 4:
+            if positionA[1] + 1 > 5:
                 positionA[1] = 0
             else:
                 positionA[1] += 1
-            if positionB[1] + 1 > 4:
+            if positionB[1] + 1 > 5:
                 positionB[1] = 0
             else:
                 positionB[1] += 1
@@ -94,11 +95,11 @@ def Encrypt(plaintextArray, keyTableArray):
             encryptedCiphertext += keyTableArray[positionA[0]][positionA[1]]
             encryptedCiphertext += keyTableArray[positionB[0]][positionB[1]]
         elif positionA[1] == positionB[1]:
-            if positionA[0] + 1 > 4:
+            if positionA[0] + 1 > 5:
                 positionA[0] = 0
             else:
                 positionA[0] += 1
-            if positionB[0] + 1 > 4:
+            if positionB[0] + 1 > 5:
                 positionB[0] = 0
             else:
                 positionB[0] += 1
@@ -120,11 +121,11 @@ def Decrypt(ciphertextArray, keyTableArray):
         positionB = Search(keyTableArray, ciphertextArray[i][1])
 
         if positionA[0] == positionB[0]:
-            if positionA[1] - 1 > 4:
+            if positionA[1] - 1 > 5:
                 positionA[1] = 0
             else:
                 positionA[1] -= 1
-            if positionB[1] - 1 > 4:
+            if positionB[1] - 1 > 5:
                 positionB[1] = 0
             else:
                 positionB[1] -= 1
@@ -132,11 +133,11 @@ def Decrypt(ciphertextArray, keyTableArray):
             decryptedCiphertext += keyTableArray[positionA[0]][positionA[1]]
             decryptedCiphertext += keyTableArray[positionB[0]][positionB[1]]
         elif positionA[1] == positionB[1]:
-            if positionA[0] - 1 > 4:
+            if positionA[0] - 1 > 5:
                 positionA[0] = 0
             else:
                 positionA[0] -= 1
-            if positionB[0] - 1 > 4:
+            if positionB[0] - 1 > 5:
                 positionB[0] = 0
             else:
                 positionB[0] -= 1
@@ -152,24 +153,24 @@ def Decrypt(ciphertextArray, keyTableArray):
 # A mindent elvégző funkció
 def EncryptWithPlayfair():
     # A könnyebb kezelés érdekében a kulcsot és a titkosítandó szót is kisbetűkre konvertáljuk
-    # Majd eltávolítjuk az összes space-t
-    plaintext = "helLo tHere My friEnd thIs iS a sEcret"
+    plaintext = "Szia haver hogyan vagy merre voltál"
     plaintext = plaintext.lower()
-    plaintext = RemoveSpaces(plaintext)
+    plaintext = plaintext.strip()
     print("A titkosítani kívánt szó:", plaintext)
+    plaintext = SpaceConversion(plaintext)
 
     # A könnyebb kezelés érdekében a kulcsot és a titkosítandó szót is kisbetűkre konvertáljuk
-    # Majd eltávolítjuk az összes space-t
-    key = "frIenDs alWaYs BetRay"
+    key = "haver"
     key = key.lower()
-    key = RemoveSpaces(key)
+    key = key.strip()
     print("A titkos kulcs:", key)
+    key = SpaceConversion(key)
 
     # Kiegészítjük a szót és feldaraboljuk párokra
     plaintext = Prepare(plaintext)
 
     # Legeneráljuk a kulcs táblát, ami egy két dimenziós mátrix
-    keyTableArray = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
+    keyTableArray = [[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]
     keyTableArray = GenerateKeyTable(key, keyTableArray)
 
     return Encrypt(plaintext, keyTableArray)
@@ -178,30 +179,29 @@ def EncryptWithPlayfair():
 def DecryptWithPlayfair():
     # Titkosított szó bekérése a felhasználótól
     # A könnyebb kezelés érdekében a kulcsot és a titkosított szót is kisbetűkre konvertáljuk
-    # Majd eltávolítjuk az összes space-t
     ciphertext = input("Kérem írja be a titkosított szót! \n")
     ciphertext = ciphertext.lower()
-    ciphertext = RemoveSpaces(ciphertext)
+    ciphertext = ciphertext.strip()
     print("A titkosított szó:", ciphertext, "\n")
 
     # A könnyebb kezelés érdekében a kulcsot és a titkosított szót is kisbetűkre konvertáljuk
-    # Majd eltávolítjuk az összes space-t
-    key = "frIenDs alWaYs BetRay"
+    key = "haver"
     key = key.lower()
-    key = RemoveSpaces(key)
+    key = key.strip()
     print("A titkos kulcs:", key)
+    key = SpaceConversion(key)
 
     # Feldaraboljuk párokra a titkosított szót a dekódoláshoz
     ciphertext = Prepare(ciphertext)
 
     # Legeneráljuk a kulcs táblát, ami egy két dimenziós mátrix
-    keyTableArray = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
+    keyTableArray = [[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]
     keyTableArray = GenerateKeyTable(key, keyTableArray)
 
-    return Decrypt(ciphertext, keyTableArray)
+    return SpaceConversion(Decrypt(ciphertext, keyTableArray))
 
 encryptResult = EncryptWithPlayfair()
-print("A titkosított változat", encryptResult, "\n")
+print("A titkosított változat: ", encryptResult, "\n")
 
 decryptResult = DecryptWithPlayfair()
-print("Az eredeti olvasható változat", decryptResult)
+print("Az eredeti olvasható változat: ", decryptResult)
