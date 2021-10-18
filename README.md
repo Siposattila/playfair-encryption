@@ -6,7 +6,7 @@ Wikipédia a Playfair titkosításról: [Wikipédia](https://en.wikipedia.org/wi
 
 Használt python verzió: 3.8.10
 
-Az projekthez használt források:
+A projekthez használt források:
 - [https://medium.com/analytics-vidhya/play-fair-cipher-encryption-using-python3-f91c42931f52](https://medium.com/analytics-vidhya/play-fair-cipher-encryption-using-python3-f91c42931f52)
 - [https://www.geeksforgeeks.org/playfair-cipher-with-examples/](https://www.geeksforgeeks.org/playfair-cipher-with-examples/)
 
