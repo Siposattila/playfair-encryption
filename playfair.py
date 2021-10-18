@@ -151,14 +151,14 @@ def Decrypt(ciphertextArray, keyTableArray):
 
 # A mindent elvégző funkció
 def EncryptWithPlayfair():
-    # A könnyebb kezelés érdekében a kulcsot és a titkosítandó szót is kisbetükre konvertáljuk
+    # A könnyebb kezelés érdekében a kulcsot és a titkosítandó szót is kisbetűkre konvertáljuk
     # Majd eltávolítjuk az összes space-t
     plaintext = "helLo tHere My friEnd thIs iS a sEcret"
     plaintext = plaintext.lower()
     plaintext = RemoveSpaces(plaintext)
     print("A titkosítani kívánt szó:", plaintext)
 
-    # A könnyebb kezelés érdekében a kulcsot és a titkosítandó szót is kisbetükre konvertáljuk
+    # A könnyebb kezelés érdekében a kulcsot és a titkosítandó szót is kisbetűkre konvertáljuk
     # Majd eltávolítjuk az összes space-t
     key = "frIenDs alWaYs BetRay"
     key = key.lower()
@@ -168,7 +168,7 @@ def EncryptWithPlayfair():
     # Kiegészítjük a szót és feldaraboljuk párokra
     plaintext = Prepare(plaintext)
 
-    # Legeneráljuk a kulcs táblát, ami egy 2 dimenziós mátrix
+    # Legeneráljuk a kulcs táblát, ami egy két dimenziós mátrix
     keyTableArray = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
     keyTableArray = GenerateKeyTable(key, keyTableArray)
 
@@ -177,14 +177,14 @@ def EncryptWithPlayfair():
 # A mindent elvégző funkció
 def DecryptWithPlayfair():
     # Titkosított szó bekérése a felhasználótól
-    # A könnyebb kezelés érdekében a kulcsot és a titkosított szót is kisbetükre konvertáljuk
+    # A könnyebb kezelés érdekében a kulcsot és a titkosított szót is kisbetűkre konvertáljuk
     # Majd eltávolítjuk az összes space-t
     ciphertext = input("Kérem írja be a titkosított szót! \n")
     ciphertext = ciphertext.lower()
     ciphertext = RemoveSpaces(ciphertext)
     print("A titkosított szó:", ciphertext, "\n")
 
-    # A könnyebb kezelés érdekében a kulcsot és a titkosított szót is kisbetükre konvertáljuk
+    # A könnyebb kezelés érdekében a kulcsot és a titkosított szót is kisbetűkre konvertáljuk
     # Majd eltávolítjuk az összes space-t
     key = "frIenDs alWaYs BetRay"
     key = key.lower()
@@ -194,7 +194,7 @@ def DecryptWithPlayfair():
     # Feldaraboljuk párokra a titkosított szót a dekódoláshoz
     ciphertext = Prepare(ciphertext)
 
-    # Legeneráljuk a kulcs táblát, ami egy 2 dimenziós mátrix
+    # Legeneráljuk a kulcs táblát, ami egy két dimenziós mátrix
     keyTableArray = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
     keyTableArray = GenerateKeyTable(key, keyTableArray)
 
